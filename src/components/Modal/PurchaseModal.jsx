@@ -6,11 +6,28 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/react'
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
+import Button from '../Shared/Button/Button'
+import useAuth from './../../hooks/useAuth';
+import toast from 'react-hot-toast/headless';
 
-const PurchaseModal = ({ closeModal, isOpen }) => {
+const PurchaseModal = ({ closeModal, isOpen, plant }) => {
+const{totalQuant, setTotalQuant} = useState(1)
+const {user} =useAuth()
   // Total Price Calculation
+  const{category,  price, name, quantity,} = plant
 
+  const handleQuantity = value =>{
+    if(value > quantity){
+      setTotalQuant(quantity)
+      return toast.error('Quantity exceeds available stock')
+    }
+    if(value < 0){
+      setTotalQuant(1)
+      return toast.error('Quantity cannot be less than 1')
+    }
+    setTotalQuant(value)
+  }
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={closeModal}>
@@ -45,21 +62,59 @@ const PurchaseModal = ({ closeModal, isOpen }) => {
                   Review Info Before Purchase
                 </DialogTitle>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Plant: Money Plant</p>
+                  <p className='text-sm text-gray-500'>Plant: {name}</p>
                 </div>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Category: Indoor</p>
+                  <p className='text-sm text-gray-500'>Category: {category}</p>
                 </div>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Customer: PH</p>
+                  <p className='text-sm text-gray-500'>Customer: {user?.displayName}</p>
                 </div>
 
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Price: $ 120</p>
+                  <p className='text-sm text-gray-500'>Price: $ {price}</p>
                 </div>
                 <div className='mt-2'>
-                  <p className='text-sm text-gray-500'>Available Quantity: 5</p>
+                  <p className='text-sm text-gray-500'>Available Quantity: {quantity}</p>
                 </div>
+                {/* Quantity input field */}
+                <div className='space-y-1 text-sm'>
+                <label htmlFor='quantity' className=' text-gray-600'>
+                  Quantity:
+                </label>
+                <input
+               
+                value={totalQuant}
+                onChange={e =>handleQuantity(e.target.value)}
+                  className='ml-2 p-2 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white'
+                  name='quantity'
+                  id='quantity'
+                  type='number'
+                  placeholder='Available quantity'
+                  required
+                />
+              </div>
+
+                {/* Address input field */}
+                <div className='space-y-1 text-sm'>
+                <label htmlFor='address' className=' text-gray-600'>
+                  Address:
+                </label>
+                <input
+                
+                  className='ml-2 p-2 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white'
+                  name='address'
+                  id='address'
+                  type='text'
+                  placeholder='Shipping Address'
+                  required
+                />
+              </div>
+               <div className='mt-3'>
+               <Button label='Purchase'/>
+               </div>
+
+          
               </DialogPanel>
             </TransitionChild>
           </div>

@@ -12,7 +12,7 @@ import LoadingSpinner from '../../components/Shared/LoadingSpinner'
 const PlantDetails = () => {
   const {id} = useParams();
   let [isOpen, setIsOpen] = useState(false)
-  const{data:plant =[], isLoading,refetch} = useQuery({
+  const{data:plant =[], isLoading} = useQuery({
     queryKey:['plant', id],
     queryFn: async ()=>{
       const {data} = await axios(`${import.meta.env.VITE_API_URL}/plants/${id}` )
@@ -98,12 +98,14 @@ const{category, description, image, price, name, seller,quantity,} = plant
           <div className='flex justify-between'>
             <p className='font-bold text-3xl text-gray-500'>Price: {price}$</p>
             <div>
-              <Button label={quantity > 0 ? 'Purchase' : 'Out Of Stock' } />
+              <Button
+              onClick={ ()=> setIsOpen(true)}
+              label={quantity > 0 ? 'Purchase' : 'Out Of Stock' } />
             </div>
           </div>
           <hr className='my-6' />
 
-          <PurchaseModal closeModal={closeModal} isOpen={isOpen} />
+          <PurchaseModal plant={plant} closeModal={closeModal} isOpen={isOpen} />
         </div>
       </div>
     </Container>
