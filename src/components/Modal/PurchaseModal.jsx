@@ -9,14 +9,30 @@ import {
 import { Fragment, useState } from 'react'
 import Button from '../Shared/Button/Button'
 import useAuth from './../../hooks/useAuth';
-import toast from 'react-hot-toast/headless';
+import toast from 'react-hot-toast';
+import useAxiosSecure from '../../hooks/useAxiosSecure';
 
 const PurchaseModal = ({ closeModal, isOpen, plant }) => {
-  const{category,  price, name, quantity,} = plant
+  const {user} =useAuth()
+  const axiosSecure = useAxiosSecure()
+  const{category, seller,  price, name, quantity, _id} = plant
   const [totalQuant, setTotalQuant] = useState(1);
   const [totalPrice, setTotalPrice] = useState(plant?.price || 0);
+  const [purchaseInfo, setPurchaseInfo] = useState({
+    customer: {
+      name: user?.displayName,
+      email: user?.email,
+      image: user?.photoURL,
+    },
+    plantId: _id,
+    price: totalPrice,
+    quantity: totalQuant,
+    seller: seller?.email,
+    address: '',
+    status: 'Pending',
+  })
   
-const {user} =useAuth()
+
   // Total Price Calculation
  
 
@@ -31,7 +47,27 @@ const {user} =useAuth()
     }
     setTotalQuant(value)
     setTotalPrice(value * price)
+    setPurchaseInfo(prv => {
+      return {...prv, quantity: value, price:value * price}
+    })
   }
+
+const handlePurchase = async () =>{
+  //post request to db
+try{
+  await axiosSecure.post('/order', purchaseInfo)
+  toast.success('Order SuccessFull')
+}catch (err) {
+  console.log(err)
+}
+
+finally{
+  closeModal()
+}
+
+
+}
+
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as='div' className='relative z-10' onClose={closeModal}>
@@ -104,17 +140,20 @@ const {user} =useAuth()
                   Address:
                 </label>
                 <input
-                
                   className='ml-2 p-2 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white'
                   name='address'
                   id='address'
+                  onChange={(e)=>setPurchaseInfo(prv=>{
+                    return { ...prv, address: e.target.value}
+                  })
+                }
                   type='text'
                   placeholder='Shipping Address'
                   required
                 />
               </div>
                <div className='mt-3'>
-               <Button label={`Pay ${totalPrice}$`}/>
+               <Button onClick={handlePurchase} label={`Pay ${totalPrice} $`}/>
                </div>
 
           
