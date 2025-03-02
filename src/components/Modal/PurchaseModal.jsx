@@ -12,10 +12,13 @@ import useAuth from './../../hooks/useAuth';
 import toast from 'react-hot-toast/headless';
 
 const PurchaseModal = ({ closeModal, isOpen, plant }) => {
-const{totalQuant, setTotalQuant} = useState(1)
+  const{category,  price, name, quantity,} = plant
+  const [totalQuant, setTotalQuant] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(plant?.price || 0);
+  
 const {user} =useAuth()
   // Total Price Calculation
-  const{category,  price, name, quantity,} = plant
+ 
 
   const handleQuantity = value =>{
     if(value > quantity){
@@ -27,6 +30,7 @@ const {user} =useAuth()
       return toast.error('Quantity cannot be less than 1')
     }
     setTotalQuant(value)
+    setTotalPrice(value * price)
   }
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -83,9 +87,8 @@ const {user} =useAuth()
                   Quantity:
                 </label>
                 <input
-               
                 value={totalQuant}
-                onChange={e =>handleQuantity(e.target.value)}
+                onChange={e =>handleQuantity(parseInt(e.target.value))}
                   className='ml-2 p-2 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white'
                   name='quantity'
                   id='quantity'
@@ -111,7 +114,7 @@ const {user} =useAuth()
                 />
               </div>
                <div className='mt-3'>
-               <Button label='Purchase'/>
+               <Button label={`Pay ${totalPrice}$`}/>
                </div>
 
           
