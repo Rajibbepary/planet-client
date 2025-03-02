@@ -12,7 +12,7 @@ import LoadingSpinner from '../../components/Shared/LoadingSpinner'
 const PlantDetails = () => {
   const {id} = useParams();
   let [isOpen, setIsOpen] = useState(false)
-  const{data:plant =[], isLoading} = useQuery({
+  const{data:plant =[], isLoading, refetch} = useQuery({
     queryKey:['plant', id],
     queryFn: async ()=>{
       const {data} = await axios(`${import.meta.env.VITE_API_URL}/plants/${id}` )
@@ -105,7 +105,12 @@ const{category, description, image, price, name, seller,quantity,} = plant
           </div>
           <hr className='my-6' />
 
-          <PurchaseModal plant={plant} closeModal={closeModal} isOpen={isOpen} />
+          <PurchaseModal 
+          plant={plant}
+           closeModal={closeModal}
+            isOpen={isOpen}
+            refetch={refetch}
+            />
         </div>
       </div>
     </Container>
