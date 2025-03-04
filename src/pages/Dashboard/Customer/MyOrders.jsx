@@ -12,7 +12,7 @@ const MyOrders = () => {
     data:
     orders =[],
    isLoading,
-  
+  refetch
   } = useQuery({
     queryKey:['orders', user?.email],
     queryFn: async ()=>{
@@ -84,6 +84,7 @@ const MyOrders = () => {
                   {
                     orders.map(orderData =>( <CustomerOrderDataRow
                       key={orderData._id}
+                      refetch={refetch}
                       orderData={orderData}
                       />))
                   }
