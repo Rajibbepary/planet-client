@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import { TbFidgetSpinner } from 'react-icons/tb'
 import LoadingSpinner from '../../components/Shared/LoadingSpinner'
 
+
 const Login = () => {
   const { signIn, signInWithGoogle, loading, user } = useAuth()
   const navigate = useNavigate()
@@ -21,8 +22,8 @@ const Login = () => {
 
     try {
       //User Login
-      await signIn(email, password)
-
+     await signIn(email, password)
+   
       navigate(from, { replace: true })
       toast.success('Login Successful')
     } catch (err) {
