@@ -1,8 +1,12 @@
+/* eslint-disable react/prop-types */
 import { useState } from 'react'
 import DeleteModal from '../../Modal/DeleteModal'
 import UpdatePlantModal from '../../Modal/UpdatePlantModal'
+import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import toast from 'react-hot-toast'
 
 const PlantDataRow = ({ refetch, plant}) => {
+   const axiosSecure = useAxiosSecure()
   let [isOpen, setIsOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
 
@@ -13,6 +17,20 @@ const PlantDataRow = ({ refetch, plant}) => {
     setIsOpen(false)
   }
 const{image, name, category, price, quantity, _id} = plant || {}
+
+const handlePlantDelete = async()=>{
+
+  try{
+    await axiosSecure.delete(`/plants/${_id}`)
+    toast.success('Plant successfully removed')
+    refetch()
+  }catch(err){
+    console.log(err)
+    toast.error(err.response.data)
+  }finally{
+    closeModal()
+  }
+}
 
   return (
     <tr>
@@ -36,7 +54,7 @@ const{image, name, category, price, quantity, _id} = plant || {}
         <p className='text-gray-900 whitespace-no-wrap'>{category}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 whitespace-no-wrap'>{price}</p>
+        <p className='text-gray-900 whitespace-no-wrap'>$ {price}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
         <p className='text-gray-900 whitespace-no-wrap'>{quantity}</p>
@@ -53,7 +71,9 @@ const{image, name, category, price, quantity, _id} = plant || {}
           ></span>
           <span className='relative'>Delete</span>
         </span>
-        <DeleteModal isOpen={isOpen} closeModal={closeModal} />
+        <DeleteModal
+        handleDelet={handlePlantDelete}
+        isOpen={isOpen} closeModal={closeModal} />
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
         <span
@@ -75,4 +95,9 @@ const{image, name, category, price, quantity, _id} = plant || {}
   )
 }
 
+
+// PlantDataRow.propTypes = {
+//  plant: PropTypes.fun,
+  
+// }
 export default PlantDataRow
