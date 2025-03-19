@@ -26,6 +26,25 @@ const handleDelet = async ()=>{
   }
 }
 
+//handle status change
+
+const handleStatus = async(newStatus)=>{
+ if(status === newStatus) return
+ try{
+  //update order status
+  await axiosSecure.patch(`/orders/${_id}`, {
+    quantityToUpdate:quantity,
+    status: newStatus,
+  })
+  refetch()
+  toast.success('Status Updated')
+}catch(err){
+  console.log(err)
+  toast.error(err.response.data)
+}
+
+}
+
 
   return (
     <tr>
@@ -53,6 +72,8 @@ const handleDelet = async ()=>{
           <select
             required
             defaultValue={status}
+            onChange={e=> handleStatus(e.target.value)}
+            disabled={status === 'Delivered'}
             className='p-1 border-2 border-lime-300 focus:outline-lime-500 rounded-md text-gray-900 whitespace-no-wrap bg-white'
             name='category'
           >
