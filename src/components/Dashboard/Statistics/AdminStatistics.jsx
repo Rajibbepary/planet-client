@@ -1,8 +1,25 @@
 import { Calendar } from 'react-date-range'
 import { FaUserAlt, FaDollarSign } from 'react-icons/fa'
 import { BsFillCartPlusFill, BsFillHouseDoorFill } from 'react-icons/bs'
+import { useQuery } from '@tanstack/react-query'
+import useAxiosSecure from '../../../hooks/useAxiosSecure'
+import LoadingSpinner from '../../Shared/LoadingSpinner'
 
 const AdminStatistics = () => {
+  const axiosSecure = useAxiosSecure()
+//fetch stat data from server
+const { data:statData, isLoading } = useQuery({
+  queryKey: ['admin-stat'],
+  queryFn: async ()=>{
+    const {data} = await axiosSecure('/admin-stat')
+    return data
+  },
+})
+
+const { totalUser, totalPlants} = statData || {}
+
+if(isLoading) return <LoadingSpinner/>
+
   return (
     <div>
       <div className='mt-12'>
@@ -52,7 +69,7 @@ const AdminStatistics = () => {
                 Total Plants
               </p>
               <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                120
+              {totalPlants}
               </h4>
             </div>
           </div>
@@ -68,7 +85,7 @@ const AdminStatistics = () => {
                 Total User
               </p>
               <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                10
+               {totalUser}
               </h4>
             </div>
           </div>
