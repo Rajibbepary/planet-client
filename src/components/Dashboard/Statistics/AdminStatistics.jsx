@@ -16,7 +16,7 @@ const { data:statData, isLoading } = useQuery({
   },
 })
 
-const { totalUser, totalPlants} = statData || {}
+const { totalUser, totalPlants, totalRevenue, totalOrder} = statData || {}
 
 if(isLoading) return <LoadingSpinner/>
 
@@ -37,7 +37,7 @@ if(isLoading) return <LoadingSpinner/>
                 Total Revenue
               </p>
               <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                $120
+                ${totalRevenue}
               </h4>
             </div>
           </div>
@@ -53,7 +53,7 @@ if(isLoading) return <LoadingSpinner/>
                 Total Orders
               </p>
               <h4 className='block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900'>
-                120
+              {totalOrder}
               </h4>
             </div>
           </div>
