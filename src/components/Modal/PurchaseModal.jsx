@@ -7,12 +7,15 @@ import {
   DialogTitle,
 } from '@headlessui/react'
 import { Fragment, useState } from 'react'
-import Button from '../Shared/Button/Button'
+//import Button from '../Shared/Button/Button'
 import useAuth from './../../hooks/useAuth';
 import toast from 'react-hot-toast';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { useNavigate } from 'react-router-dom';
-
+import { Elements} from '@stripe/react-stripe-js';
+import {loadStripe} from '@stripe/stripe-js';
+import CheckoutForm from '../Form/CheckoutForm';
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIK_KEY)
 const PurchaseModal = ({ closeModal, isOpen, plant, refetch }) => {
   const navigate = useNavigate()
   const {user} =useAuth()
@@ -141,6 +144,11 @@ finally{
                   required
                 />
               </div>
+      {/* checkoutForm */}
+      <Elements stripe={stripePromise}>
+     <CheckoutForm/>
+    </Elements>
+
 
                 {/* Address input field */}
                 <div className='space-y-1 text-sm'>
@@ -160,9 +168,9 @@ finally{
                   required
                 />
               </div>
-               <div className='mt-3'>
+               {/* <div className='mt-3'>
                <Button onClick={handlePurchase} label={`Pay ${totalPrice} $`}/>
-               </div>
+               </div> */}
 
           
               </DialogPanel>
