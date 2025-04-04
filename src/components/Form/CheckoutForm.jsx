@@ -7,8 +7,12 @@ import {CardElement, useElements, useStripe} from '@stripe/react-stripe-js';
 
 import './CheckoutForm.css';
 import Button from '../Shared/Button/Button';
+import { PropTypes } from 'prop-types';
 
-const CheckoutForm = () => {
+const CheckoutForm = (
+  {closeModal,
+  purchaseInfo,
+  refetch}) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -58,14 +62,20 @@ const CheckoutForm = () => {
           },
         }}
       />
-       <Button label={`Pay ${10} $`}/>
-      <button type="submit" disabled={!stripe}>
-        Pay
-      </button>
+      <div className='flex justify-around mt-2 space-x-3'>
+      <Button disabled={!stripe} label={`Pay ${10} $`}/>
+      <Button onClick={closeModal} label={'Cancel'}/>
+      
+      </div>
+     
     </form>
   );
 };
 
-
+CheckoutForm.propTypes = {
+  closeModal:PropTypes.string,
+  refetch:PropTypes.string,
+  purchaseInfo:PropTypes.string
+}
 
 export default CheckoutForm;

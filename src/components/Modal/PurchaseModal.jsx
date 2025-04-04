@@ -144,20 +144,15 @@ finally{
                   required
                 />
               </div>
-      {/* checkoutForm */}
-      <Elements stripe={stripePromise}>
-     <CheckoutForm/>
-    </Elements>
-
-
+  
                 {/* Address input field */}
                 <div className='space-y-1 text-sm'>
                 <label htmlFor='address' className=' text-gray-600'>
                   Address:
                 </label>
                 <input
-                  className='ml-2 p-2 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white'
-                  name='address'
+                  className='ml-3 p-2 text-gray-800 border border-lime-300 focus:outline-lime-500 rounded-md bg-white'
+                 name='address'
                   id='address'
                   onChange={(e)=>setPurchaseInfo(prv=>{
                     return { ...prv, address: e.target.value}
@@ -168,11 +163,16 @@ finally{
                   required
                 />
               </div>
-               {/* <div className='mt-3'>
-               <Button onClick={handlePurchase} label={`Pay ${totalPrice} $`}/>
-               </div> */}
+               
 
-          
+          {/* checkoutForm */}
+          <Elements stripe={stripePromise}>
+          <CheckoutForm 
+          closeModal={closeModal}
+           purchaseInfo={purchaseInfo}
+           refetch={refetch}
+           />
+       </Elements>
               </DialogPanel>
             </TransitionChild>
           </div>
