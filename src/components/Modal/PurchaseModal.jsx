@@ -171,6 +171,7 @@ finally{
           closeModal={closeModal}
            purchaseInfo={purchaseInfo}
            refetch={refetch}
+           totalQuant={totalQuant}
            />
        </Elements>
               </DialogPanel>
